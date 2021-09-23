@@ -1,35 +1,64 @@
 
 public class TennisGame3 implements TennisGame {
     
-    private int p2;
-    private int p1;
-    private String p1N;
-    private String p2N;
+    private int pointPlayer2;
+    private int pointPlayer1;
+    private String namePlayer1;
+    private String namePlayer2;
 
-    public TennisGame3(String p1N, String p2N) {
-        this.p1N = p1N;
-        this.p2N = p2N;
+    public TennisGame3(String namePlayer1, String namePlayer2) {
+        this.namePlayer1 = namePlayer1;
+        this.namePlayer2 = namePlayer2;
     }
 
     public String getScore() {
-        String s;
-        if (p1 < 4 && p2 < 4 && !(p1 + p2 == 6)) {
-            String[] p = new String[]{"Love", "Fifteen", "Thirty", "Forty"}; 
-            s = p[p1];
-            return (p1 == p2) ? s + "-All" : s + "-" + p[p2];
+        if (movePointsPlayers()) {
+            return scorePlayers();
         } else {
-            if (p1 == p2)
+            if (equalsPointsPlayers(pointPlayer1, pointPlayer2))
                 return "Deuce";
-            s = p1 > p2 ? p1N : p2N;
-            return ((p1-p2)*(p1-p2) == 1) ? "Advantage " + s : "Win for " + s;
+            return advantageOrWinnerPlayer();
         }
     }
-    
+
+    private boolean equalsPointsPlayers(int pointPlayer1, int pointPlayer2) {
+        return pointPlayer1 == pointPlayer2;
+    }
+
+    private String advantageOrWinnerPlayer() {
+        return (equalsPointsPlayers((pointPlayer1 - pointPlayer2)*(pointPlayer1 - pointPlayer2), 1)) ? advantagePlayer() : winnerPlayer();
+    }
+
+    private String winnerPlayer() {
+        return "Win for " + namepPlayerWinnerOAdvantage();
+    }
+
+    private String advantagePlayer() {
+        return "Advantage " + namepPlayerWinnerOAdvantage();
+    }
+
+    private String namepPlayerWinnerOAdvantage() {
+        return pointPlayer1 > pointPlayer2 ? namePlayer1 : namePlayer2;
+    }
+
+    private String scorePlayers() {
+        String[] p = new String[]{"Love", "Fifteen", "Thirty", "Forty"};
+        return (pointPlayer1 == pointPlayer2) ?  p[pointPlayer1] + "-All" :  p[pointPlayer1] + "-" + p[pointPlayer2];
+    }
+
+    private boolean movePointsPlayers() {
+        return limitMovePoints() && !(pointPlayer1 + pointPlayer2 == 6);
+    }
+
+    private boolean limitMovePoints() {
+        return pointPlayer1 < 4 && pointPlayer2 < 4;
+    }
+
     public void wonPoint(String playerName) {
-        if (playerName == "player1")
-            this.p1 += 1;
+        if (playerName.equals(this.namePlayer1))
+            this.pointPlayer1 += 1;
         else
-            this.p2 += 1;
+            this.pointPlayer2 += 1;
         
     }
 
